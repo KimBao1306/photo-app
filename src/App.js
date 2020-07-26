@@ -1,26 +1,47 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Header from 'components/Header';
+import NotFound from 'components/NotFound';
+import React, {Suspense, useEffect} from 'react';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import Loading from 'components/Loading';
+import productApi from 'api/productsApi';
+
+const Photo = React.lazy(() => import('./features/Photo'));
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	useEffect(() => {
+		const getBlogs = async () => {
+			try {
+				const params = {_page: 1, _limit: 20};
+				const response = await productApi.getAll(params);
+				console.log(response);
+			} catch (error) {
+				console.log('Error: ', error);
+			}
+		};
+		getBlogs();
+	}, []);
+
+	return (
+		<div className="App">
+			<Suspense fallback={<Loading />}>
+				<BrowserRouter>
+					<Header />
+
+					<Switch>
+						{/* <Redirect exact from="/" to="/photos" /> */}
+
+						<Route
+							exact
+							path="/"
+							component={() => <div>Hello Word - This is a home page</div>}
+						/>
+						<Route path="/photos" component={Photo} />
+						<Route component={NotFound} />
+					</Switch>
+				</BrowserRouter>
+			</Suspense>
+		</div>
+	);
 }
 
 export default App;
