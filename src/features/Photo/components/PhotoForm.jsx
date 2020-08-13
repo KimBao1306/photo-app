@@ -1,13 +1,15 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import {Button, FormGroup} from 'reactstrap';
+import {FastField, Form, Formik} from 'formik';
+import * as Yup from 'yup';
+
 import {PHOTO_CATEGORY_OPTIONS} from 'constants/global';
+
+import Loading from 'components/Loading';
 import InputField from 'custom/customField/InputField';
 import RandomPhotoField from 'custom/customField/RandomPhotoField';
 import SelectField from 'custom/customField/SelectField';
-import {FastField, Form, Formik} from 'formik';
-import PropTypes from 'prop-types';
-import React from 'react';
-import {Button, FormGroup} from 'reactstrap';
-import * as Yup from 'yup';
-import Loading from 'components/Loading';
 
 PhotoForm.propTypes = {
 	onSubmit: PropTypes.func,
@@ -35,7 +37,8 @@ function PhotoForm(props) {
 			onSubmit={onSubmit}
 		>
 			{(formikProps) => {
-				const {values, errors, touched, isSubmitting} = formikProps;
+				// formikProps => values, errors, touched
+				const {isSubmitting} = formikProps;
 				// console.log({values, errors, touched, isSubmitting});
 				return (
 					<Form>

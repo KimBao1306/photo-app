@@ -1,6 +1,6 @@
 import axios from 'axios';
 import queryString from 'query-string';
-
+import firebase from 'firebase';
 /**
  * khởi tạo một axios theo ý muốn của chúng ta.
  * tự định nghĩa các cấu hình bên trong
@@ -14,10 +14,17 @@ const axiosClient = axios.create({
 	paramsSerializer: (params) => queryString.stringify(params),
 });
 
-// axiosClient.interceptors.request.use(async (config) => {
-// 	// Handle token here ...
-// 	return config;
-// });
+axiosClient.interceptors.request.use(async (config) => {
+	// Handle token here ...
+	const currentTokenUser =
+		JSON.parse(localStorage.getItem('token_firebase')) || '';
+
+	if (currentTokenUser) {
+		config.headers.Authorization = `Bearer ${currentTokenUser}`;
+	}
+
+	return config;
+});
 
 axiosClient.interceptors.response.use(
 	(response) => {
